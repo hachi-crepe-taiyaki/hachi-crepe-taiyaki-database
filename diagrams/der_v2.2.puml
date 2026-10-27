@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam classFontSize 12
+skinparam classFontName "Arial"
+skinparam arrowColor #2C3E50
+skinparam arrowThickness 1.5
+
+entity "usuario" as usuario {
+    * idUsuario : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(100)
+    * email : VARCHAR(100) <<UK>>
+    * senha : VARCHAR(255)
+    telefone : CHAR(11)
+    * funcao : TINYINT
+    * status_usuario : TINYINT
+    dt_nasc : DATE
+    cidade : VARCHAR(100)
+    regiao : VARCHAR(100)
+    selos : INT
+    * criado_em : DATETIME
+    * atualizado_em : DATETIME
+}
+
+entity "categoria" as categoria {
+    * idCategoria : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(45) <<UK>>
+    descricao : VARCHAR(255)
+}
+
+entity "produto" as produto {
+    * idProduto : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(100)
+    descricao : VARCHAR(255)
+    * preco : DECIMAL(5,2)
+    imagem_url : VARCHAR(255)
+    * disponivel : TINYINT
+    --
+    * fk_categoria : INT <<FK>>
+}
+
+entity "Codigo" as Codigo {
+    * idCodigos : INT <<PK, AI>>
+    --
+    * codigo : CHAR(6) <<UK>>
+    * statusScan : TINYINT
+    * valor : DECIMAL(5,2)
+}
+
+entity "resgate_selo" as resgate_selo {
+    * idResgate : INT <<PK, AI>>
+    --
+    * Codigos_idCodigos : INT <<FK, UK>>
+    * usuario_idUsuario : INT <<FK>>
+    * data_hora : DATETIME
+}
+
+entity "resgate_item" as resgate_item {
+    * idResgate : INT <<PK, AI>>
+    --
+    * usuario_idUsuario : INT <<FK>>
+    * data_resgate : DATETIME
+}
+
+entity "feedback" as feedback {
+    * idFeedback : INT <<PK, AI>>
+    --
+    * nota : INT
+    comentario : VARCHAR(255)
+    * data_hora : DATETIME
+    --
+    * fk_usuario : INT <<FK>>
+}
+
+' Relacionamentos
+categoria ||--o{ produto : "possui"
+usuario ||--o{ feedback : "avalia"
+usuario ||--o{ resgate_selo : "resgata selo"
+usuario ||--o{ resgate_item : "solicita cortesia"
+Codigo ||--o| resgate_selo : "utilizado em"
+
+@enduml

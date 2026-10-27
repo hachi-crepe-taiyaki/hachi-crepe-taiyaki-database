@@ -1,0 +1,17 @@
+# MySQL Workbench Backups
+*.bak
+*.mwb.bak
+
+# IDE & Editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Logs e Dumps Temporários
+*.log
+*.tmp

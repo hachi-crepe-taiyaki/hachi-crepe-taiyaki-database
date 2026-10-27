@@ -1,0 +1,96 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam classFontSize 12
+skinparam classFontName "Arial"
+skinparam arrowColor #7F8C8D
+skinparam arrowThickness 1.5
+
+entity "usuario" as usuario {
+    * idUsuario : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(100)
+    * email : VARCHAR(100) <<UK>>
+    * senha : VARCHAR(255)
+    telefone : CHAR(11)
+    * criado_em : DATETIME
+    * atualizado_em : DATETIME
+    * status_usuario : TINYINT
+    * funcao : TINYINT(3)
+    * dt_nasc : DATE
+    * cidade : VARCHAR(45)
+}
+
+entity "categoria" as categoria {
+    * idCategoria : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(45) <<UK>>
+    descricao : VARCHAR(255)
+}
+
+entity "produto" as produto {
+    * idProduto : INT <<PK, AI>>
+    --
+    * nome : VARCHAR(100)
+    descricao : VARCHAR(255)
+    * preco : DECIMAL(5,2)
+    imagem_url : VARCHAR(255)
+    * disponivel : TINYINT
+    --
+    * fk_categoria : INT <<FK>>
+}
+
+entity "compra" as compra {
+    * idCompra : INT <<PK, AI>>
+    * fk_usuario : INT <<PK, FK>>
+    --
+    * codigo : CHAR(44)
+    * valor : DECIMAL(5,2)
+    * data_hora : DATETIME
+}
+
+entity "cartao_fidelidade" as cartao_fidelidade {
+    * idCartao : INT <<PK, AI>>
+    * fk_usuario : INT <<PK, FK>>
+    --
+    * data_abertura : DATETIME
+    * status_cartao : VARCHAR(45)
+}
+
+entity "carimbo" as carimbo {
+    * idCarimbo : INT <<PK, AI>>
+    * fk_cartao : INT <<PK, FK>>
+    * fk_compra : INT <<PK, FK, UK>>
+    --
+    * data_concessao : DATETIME
+    * valor_minimo : DECIMAL(5,2)
+}
+
+entity "resgate" as resgate {
+    * idResgate : INT <<PK, AI>>
+    * fk_cartao : INT <<PK, FK, UK>>
+    --
+    * data_resgate : DATETIME
+}
+
+entity "feedback" as feedback {
+    * idFeedback : INT <<PK, AI>>
+    --
+    * nota : INT
+    comentario : VARCHAR(255)
+    * data_hora : DATETIME
+    --
+    * fk_usuario : INT <<FK>>
+}
+
+categoria ||--o{ produto : "possui"
+usuario ||--o{ feedback : "avalia"
+usuario ||--o{ compra : "realiza"
+usuario ||--o{ cartao_fidelidade : "possui"
+compra ||--o| carimbo : "gera"
+cartao_fidelidade ||--o{ carimbo : "acumula"
+cartao_fidelidade ||--o| resgate : "concede"
+
+@enduml
